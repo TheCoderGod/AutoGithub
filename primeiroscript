@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+whoami
+hostname
+uname -rms
+uptime -p

@@ -1,0 +1,70 @@
+#!/usr/bin/env bash
+
+##SOMENTE EXECUTE ESSE SCRIPT NO DIRETORIO ONDE ESTAO OS ARQUIVOS!
+
+#Script para automatizar a subida de arquivos no github
+
+### ANTES DE INICIAR O PROCESSO VERIFIQUE SE TEM O GIT INSTALADO
+### NO SEU SISTEMA
+
+#Verificando se o diretorio ~/bin ja existe
+if [ ! -d ~/bin ]; then
+
+#Se nao existir, crie a pasta bin
+	mkdir ~/bin
+
+#Copiando o script que esta sendo executado para a pasta /bin
+	cp "$0" ./subindonogithub ~/bin
+
+#Tornando o arquivo executavel
+	chmod +x ~/bin/subindonogithub
+
+#Tornando o script global
+	echo "PATH=\$PATH:/home/$USER/bin" >> /home/$USER/.bashrc
+
+echo "Configuracao concluida! O seu script foi instalado em ~/bin/subindonogithub e foi adicionado a seu PATH"
+	else
+echo "Os comandos para tornar global esse script ja foi executado!"
+echo "O script ja esta configurado corretamente!"
+echo "\n"
+
+echo "********************************************************"
+echo "Subindo novo repositorio no seu github!"
+echo "********************************************************"
+fi
+##Inicializando um repositorio Git no diretorio
+	git init
+
+##Selecionando os arquivos desejados
+	echo  "Digite 1 para adicionar todos os arquivos desse diretorio"
+	echo  "Digite 2 para selecionar os arquivos que serao adicionados"
+	read op
+if [ "$op" == 1 ]; then
+	git add .
+else
+	echo "Digite os arquivos que quer adicionar (Separados por espaco): "
+	read -a files
+
+#Adicionando os arquivos especificados pelo usuario
+	for file in "${files[@]}"; do
+		git add "$file"
+	done
+fi
+
+
+#Fazendo commit das alteracoes
+echo "\n"
+read -p "digite um commit para sua alteracao: " alt
+	git commit -m "$alt"
+
+#Especificando o repositorio no github
+echo "\n"
+echo "Agora, vá para o GitHub e crie um novo repositório (se ainda não tiver um) ou use um repositório existente."
+echo "Após criar o repositório você receberá um link que se parece com" 
+echo "https://github.com/seu_nome_de_usuario/seu_repositorio.git. Copie esse link."
+read -p "Digite o link do seu repositorio: " rep
+
+git remote add origin "$rep"
+
+##ENVIANDO ALTERACOES PARA O GITHUB
+git push -u origin master
